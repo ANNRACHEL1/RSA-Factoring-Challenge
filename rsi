@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+
+import sys
+import sympy
+
+def factorize_rsa(number):
+    p, q = sympy.ntheory.factorint(number, multiple=True)
+    return p, q
+
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: rsa <file>")
+        sys.exit(1)
+
+    filename = sys.argv[1]
+
+    with open(filename, 'r') as file:
+        numbers = [int(line.strip()) for line in file]
+
+    for number in numbers:
+        p, q = factorize_rsa(number)
+        print(f"{number}={p}*{q}")
+
+if __name__ == "__main__":
+    main()

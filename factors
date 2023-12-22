@@ -1,44 +1,26 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
+
 import sys
-import time
-import math
+import sympy
 
-def factorize_number(num):
-    factors = []
-    divisor = 2
-
-    while num > 1:
-        if num % divisor == 0:
-            factors.append(str(divisor))
-            num //= divisor
-
-        else:
-            divisor += 1
-
-    return '*'.join(factors)
-
+def factorize(number):
+    factors = sympy.factorint(number)
+    return factors
 
 def main():
     if len(sys.argv) != 2:
-        print("Usage: python3 factors.py <filename>")
-        return
+        print("Usage: factors <file>")
+        sys.exit(1)
 
     filename = sys.argv[1]
 
-    try:
-        with open(filename, 'r') as file:
-            for line in file:
-                number = int(line.strip())
-                factorization = factorize_number(number)
-                print(f"{number}={factorization}")
+    with open(filename, 'r') as file:
+        numbers = [int(line.strip()) for line in file]
 
-    except FileNotFoundError:
-        print(f"File '{filename}' not found.")
-    except ValueError:
-        print("Invalid format. file must contains only natural numbers.")
-    except Exception as e:
-        print("An error occurred:", str(e))
-
+    for number in numbers:
+        factors_dict = factorize(number)
+        factors_str = "*".join([f"{factor}^{exponent}" if exponent > 1 else str(factor) for factor, exponent in factors_dict.items()])
+        print(f"{number}={factors_str}")
 
 if __name__ == "__main__":
     main()
